@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Artifact / group id and version -->
+    <groupId>net.seeseekey</groupId>
+    <artifactId>WordPress2Markdown</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <!-- Metadata -->
+    <name>WordPress2Markdown</name>
+    <description>WordPress2Markdown is a tool that convert WordPress eXtended RSS (WXR) into markdown.</description>
+    <url>https://github.com/seeseekey/JavaStarter</url>
+
+    <licenses>
+        <license>
+            <name>GPL3</name>
+            <url>https://github.com/seeseekey/WordPress2Markdown/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>seeseekey</name>
+            <roles>
+                <role>Maintainer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <!-- Define SCM context -->
+    <scm>
+        <connection>scm:git:https://github.com/seeseekey/JavaStarter.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/seeseekey/JavaStarter.git</developerConnection>
+        <url>https://github.com/seeseekey/JavaStarter</url>
+    </scm>
+
+    <!-- Encoding settings -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <!-- External non standard repositories -->
+    <repositories>
+        <repository>
+            <id>q1z</id>
+            <url>https://repository.q1z.net</url>
+        </repository>
+    </repositories>
+
+    <!-- Definition for uploading artifact to custom repository via WebDAV -->
+    <distributionManagement>
+        <repository>
+            <id>q1z</id>
+            <url>dav:https://repository.q1z.net/upload/</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
+
+    <!-- List of dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.26</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.26</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>27.1-jre</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rometools</groupId>
+            <artifactId>rome</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lexicalscope.jewelcli</groupId>
+            <artifactId>jewelcli</artifactId>
+            <version>0.8.9</version>
+        </dependency>
+
+        <!-- Test releated dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.4.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- Build settings -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- JUnit 5 requires Surefire version 2.22.1 or higher -->
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.1</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>net.seeseekey.wordpress2markdown.WordPress2Markdown</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
