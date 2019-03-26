@@ -7,7 +7,7 @@
     <!-- Artifact / group id and version -->
     <groupId>net.seeseekey</groupId>
     <artifactId>WordPress2Markdown</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <!-- Metadata -->
     <name>WordPress2Markdown</name>
