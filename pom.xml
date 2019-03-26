@@ -7,12 +7,12 @@
     <!-- Artifact / group id and version -->
     <groupId>net.seeseekey</groupId>
     <artifactId>WordPress2Markdown</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <!-- Metadata -->
     <name>WordPress2Markdown</name>
     <description>WordPress2Markdown is a tool that convert WordPress eXtended RSS (WXR) into markdown.</description>
-    <url>https://github.com/seeseekey/JavaStarter</url>
+    <url>https://github.com/seeseekey/WordPress2Markdown</url>
 
     <licenses>
         <license>
@@ -30,13 +30,6 @@
             </roles>
         </developer>
     </developers>
-
-    <!-- Define SCM context -->
-    <scm>
-        <connection>scm:git:https://github.com/seeseekey/JavaStarter.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/seeseekey/JavaStarter.git</developerConnection>
-        <url>https://github.com/seeseekey/JavaStarter</url>
-    </scm>
 
     <!-- Encoding settings -->
     <properties>
