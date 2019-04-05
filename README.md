@@ -27,12 +27,12 @@ Help
 
 WordPress2Markdown converted the following html and other tags:
 
-* <em>
-* <b>
-* <blockquote>
-* <pre>
-* <img>
-* <a>
+* \<em\>
+* \<b\>
+* \<blockquote\>
+* \<pre\>
+* \<img\>
+* \<a\>
 * Lists
 * WordPress caption blocks ([caption])
 

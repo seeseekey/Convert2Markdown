@@ -27,6 +27,9 @@ public class WordPress2Markdown {
 
     public static void main(String[] args) throws IOException, FeedException {
 
+        // Measure time
+        long startTime = System.nanoTime();
+
         // Parse command line options
         final CommandLineOptions commandLineOptions;
 
@@ -72,6 +75,10 @@ public class WordPress2Markdown {
         SyndFeedInput syndFeedInput = new SyndFeedInput();
         SyndFeed syndFeed = syndFeedInput.build(new XmlReader(feedUrl));
 
+        // Counter for statistic
+        int posts = 0;
+        int pages = 0;
+
         // Iterate all entries and export to markdown
         for (SyndEntry entry : syndFeed.getEntries()) {
 
@@ -94,8 +101,18 @@ public class WordPress2Markdown {
             String postType = postTypeElement.getValue();
 
             // Skip all non post and pages e.g. attachment
-            if (!"post".equals(postType) && !"page".equals(postType)) {
-                continue;
+            switch(postType) {
+                case "page": {
+                    pages++;
+                    break;
+                }
+                case "post": {
+                    posts++;
+                    break;
+                }
+                default: {
+                    continue;
+                }
             }
 
             // Get status
@@ -165,6 +182,12 @@ public class WordPress2Markdown {
             }
         }
 
-        logger.info("Export complete.");
+        // Measure time
+        double timeDifferenceInSeconds = (System.nanoTime() - startTime) / 1000000000.0;
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+
+        // Print out statistics
+        logger.info("Pages: " + pages + " / Posts: " + posts);
+        logger.info("Export completed in " +  decimalFormat.format(timeDifferenceInSeconds) + " seconds");
     }
 }
