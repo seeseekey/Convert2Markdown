@@ -4,10 +4,10 @@ import com.lexicalscope.jewel.cli.Option;
 
 interface CommandLineOptions {
 
-    @Option(description = "input path", shortName = "i", defaultValue = "")
+    @Option(description = "Input path", shortName = "i", defaultValue = "")
     String getInput();
 
-    @Option(description = "output path", shortName = "o", defaultValue = "")
+    @Option(description = "Output path", shortName = "o", defaultValue = "")
     String getOutput();
 
     @Option(description = "Scheme of filenames", shortName = "s", defaultToNull = true, pattern = "POST_ID|DATETIME")
@@ -17,6 +17,9 @@ interface CommandLineOptions {
         POST_ID, DATETIME;
     }
 
-    @Option(helpRequest = true, shortName = "h")
+    @Option(description = "Export authors", shortName = "a")
+    boolean isAuthors();
+
+    @Option(description = "Show help", helpRequest = true, shortName = "h")
     boolean getHelp();
 }

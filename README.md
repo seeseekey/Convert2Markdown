@@ -11,18 +11,13 @@ WordPress2Markdown is a command line tool.
 
 ### Parameter
 
-Input Path
--input -i (required)
+The options available are:
 
-Output Path
--output -o (optional)
-
-Scheme of filenames
--scheme -s (optional)
-Parameters: POST_ID, DATETIME
-
-Help
---help -h
+	[--authors -a] : Export authors
+	[--help -h] : Show help
+	[--input -i value] : Input path
+	[--output -o value] : Output path
+	[--scheme -s /POST_ID|DATETIME/] : Scheme of filenames
 
 ## Conversion
 

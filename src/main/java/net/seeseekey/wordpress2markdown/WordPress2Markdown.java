@@ -2,6 +2,7 @@ package net.seeseekey.wordpress2markdown;
 
 import com.lexicalscope.jewel.cli.ArgumentValidationException;
 import com.lexicalscope.jewel.cli.CliFactory;
+import com.rometools.rome.feed.module.DCModule;
 import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -63,6 +64,8 @@ public class WordPress2Markdown {
             scheme = CommandLineOptions.Scheme.POST_ID;
         }
 
+        boolean exportAuthors = commandLineOptions.isAuthors();
+
         // Print message
         logger.info("WordPress2Markdown");
 
@@ -101,7 +104,7 @@ public class WordPress2Markdown {
             String postType = postTypeElement.getValue();
 
             // Skip all non post and pages e.g. attachment
-            switch(postType) {
+            switch (postType) {
                 case "page": {
                     pages++;
                     break;
@@ -127,6 +130,10 @@ public class WordPress2Markdown {
             if (!"publish".equals(status)) {
                 continue;
             }
+
+            // Get author (via DC module)
+            DCModule dcModule = (DCModule) entry.getModule("http://purl.org/dc/elements/1.1/");
+            String author = dcModule.getCreator();
 
             // Get post id from foreign markup (via stream api)
             Element postIdElement = entry.getForeignMarkup().stream()
@@ -169,25 +176,34 @@ public class WordPress2Markdown {
             logger.info("Write file: " + filename);
             try (PrintWriter fileWriter = new PrintWriter(filename)) {
 
-
+                // Heading (title)
                 String title = "# " + entry.getTitle().trim();
                 fileWriter.println(title);
                 fileWriter.println();
 
+                // Content
                 for (SyndContent content : entry.getContents()) {
 
                     String contentAsString = Markdown.convert(content.getValue());
                     fileWriter.println(contentAsString);
                 }
+
+                // Metadata
+                if (exportAuthors) {
+                    fileWriter.println();
+                    fileWriter.println("---");
+                    fileWriter.println("Author: " + author);
+                }
             }
         }
 
         // Measure time
-        double timeDifferenceInSeconds = (System.nanoTime() - startTime) / 1000000000.0;
-        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        double timeDifferenceInSeconds = (System.nanoTime() - startTime) / 1000000000.0; // Get seconds from nano seconds
+        DecimalFormat decimalFormat = new DecimalFormat("#.00"); // Create pattern for formatting
 
         // Print out statistics
-        logger.info("Pages: " + pages + " / Posts: " + posts);
-        logger.info("Export completed in " +  decimalFormat.format(timeDifferenceInSeconds) + " seconds");
+        logger.info("Exported Pages: " + pages);
+        logger.info("Exported Posts: " + posts);
+        logger.info("Export completed in " + decimalFormat.format(timeDifferenceInSeconds) + " seconds");
     }
 }
