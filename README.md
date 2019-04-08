@@ -1,6 +1,7 @@
 # WordPress2Markdown
 
-WordPress2Markdown is a tool that convert WordPress eXtended RSS (WXR) into markdown.
+WordPress2Markdown is a tool that convert WordPress eXtended RSS (WXR) into markdown. Export the WordPress site via
+backend and use the WordPress eXtended RSS (WXR) with this tool.
 
 ## Usage
 
