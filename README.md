@@ -13,6 +13,7 @@ WordPress2Markdown is a command line tool.
 
 The options available are:
 
+	[--author -f value] : Filter export by author
 	[--authors -a] : Export authors
 	[--help -h] : Show help
 	[--input -i value] : Input path

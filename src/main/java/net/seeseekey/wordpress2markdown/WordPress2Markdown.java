@@ -64,6 +64,10 @@ public class WordPress2Markdown {
             scheme = CommandLineOptions.Scheme.POST_ID;
         }
 
+        // Filter options
+        String filterByAuthor = commandLineOptions.getAuthor();
+
+        // Export options
         boolean exportAuthors = commandLineOptions.isAuthors();
 
         // Print message
@@ -79,6 +83,7 @@ public class WordPress2Markdown {
         SyndFeed syndFeed = syndFeedInput.build(new XmlReader(feedUrl));
 
         // Counter for statistic
+        int skipped = 0;
         int posts = 0;
         int pages = 0;
 
@@ -114,6 +119,7 @@ public class WordPress2Markdown {
                     break;
                 }
                 default: {
+                    skipped++;
                     continue;
                 }
             }
@@ -128,12 +134,21 @@ public class WordPress2Markdown {
 
             // Only export published data
             if (!"publish".equals(status)) {
+                skipped++;
                 continue;
             }
 
             // Get author (via DC module)
             DCModule dcModule = (DCModule) entry.getModule("http://purl.org/dc/elements/1.1/");
             String author = dcModule.getCreator();
+
+            // Check if author filter is activated and check if author passed the filter
+            if (filterByAuthor != null) {
+                if (!filterByAuthor.equals(author)) {
+                    skipped++;
+                    continue;
+                }
+            }
 
             // Get post id from foreign markup (via stream api)
             Element postIdElement = entry.getForeignMarkup().stream()
@@ -202,6 +217,7 @@ public class WordPress2Markdown {
         DecimalFormat decimalFormat = new DecimalFormat("#.00"); // Create pattern for formatting
 
         // Print out statistics
+        logger.info("Skipped entries (e.g drafts, filtered entries, attachments): " + skipped);
         logger.info("Exported Pages: " + pages);
         logger.info("Exported Posts: " + posts);
         logger.info("Export completed in " + decimalFormat.format(timeDifferenceInSeconds) + " seconds");

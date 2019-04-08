@@ -17,6 +17,9 @@ interface CommandLineOptions {
         POST_ID, DATETIME;
     }
 
+    @Option(description = "Filter export by author", shortName = "f", defaultToNull = true)
+    String getAuthor();
+
     @Option(description = "Export authors", shortName = "a")
     boolean isAuthors();
 
