@@ -19,7 +19,7 @@ A image without alt: [](http://example.org/test.jpg)
 
 This is a [link](http://example.org).
 
-[[](https://example.org/wp-content/uploads/2018/05/example-1024x894.png) Example ([© OpenStreetMap-Mitwirkende](http://www.openstreetmap.org/copyright))]()
+[caption id="attachment_364" align="aligncenter" width="1024"][](https://example.org/wp-content/uploads/2018/05/example-1024x894.png) Example ([© OpenStreetMap-Mitwirkende](http://www.openstreetmap.org/copyright))[/caption]
 
 > Developers,
 >     Developers, Developers!
@@ -36,6 +36,6 @@ Footer are footer.
 
 A link with an image:
 
-[[](https://example.org/book-1024x944.png)](https://example.org/book.png)
+[](https://example.org/book-1024x944.png)
 
 READY.
