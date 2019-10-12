@@ -6,18 +6,18 @@
 
     <!-- Artifact / group id and version -->
     <groupId>net.seeseekey</groupId>
-    <artifactId>WordPress2Markdown</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <artifactId>Convert2Markdown</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
 
     <!-- Metadata -->
-    <name>WordPress2Markdown</name>
-    <description>WordPress2Markdown is a tool that convert WordPress eXtended RSS (WXR) into markdown.</description>
-    <url>https://github.com/seeseekey/WordPress2Markdown</url>
+    <name>Convert2Markdown</name>
+    <description>Convert2Markdown is a tool that convert WordPress eXtended RSS (WXR) into markdown.</description>
+    <url>https://github.com/seeseekey/Convert2Markdown</url>
 
     <licenses>
         <license>
             <name>GPL3</name>
-            <url>https://github.com/seeseekey/WordPress2Markdown/blob/master/LICENSE</url>
+            <url>https://github.com/seeseekey/Convert2MarkdownF/blob/master/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -36,6 +36,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
+    <!-- External non standard repositories -->
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/seeseekey/mediawikixml</url>
+        </repository>
+    </repositories>
 
     <!-- List of dependencies -->
     <dependencies>
@@ -71,12 +79,12 @@
             <version>1.12.1</version>
         </dependency>
         <dependency>
-            <groupId>org.wikidata.wdtk</groupId>
-            <artifactId>wdtk-dumpfiles</artifactId>
-            <version>0.10.0</version>
+            <groupId>net.seeseekey</groupId>
+            <artifactId>mediawikixml</artifactId>
+            <version>1.0.1</version>
         </dependency>
 
-        <!-- Test releated dependencies -->
+        <!-- Test related dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -108,7 +116,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>net.seeseekey.wordpress2markdown.WordPress2Markdown</mainClass>
+                            <mainClass>net.seeseekey.convert2markdown.Convert2Markdown</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

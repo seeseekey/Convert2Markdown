@@ -1,13 +1,19 @@
-# WordPress2Markdown
+# Convert2Markdown
 
-WordPress2Markdown is a tool that convert WordPress eXtended RSS (WXR) into markdown. Export the WordPress site via
+Convert2Markdown is a tool that convert content into markdown. Currently the application support the following 
+input formats: 
+
+* MediaWiki XML dump file
+* WordPress eXtended RSS (WXR)
+
+Convert2Markdown is a tool that convert WordPress eXtended RSS (WXR) into markdown. Export the WordPress site via
 backend and use the WordPress eXtended RSS (WXR) with this tool.
 
 ## Usage
 
-WordPress2Markdown is a command line tool.
+Convert2Markdown is a command line tool.
 
-> java -jar WordPress2Markdown.jar -i wordpress-export.xml -s DATETIME -o /home/seeseekey/MarkdownExport
+> java -jar Convert2Markdown.jar -i wordpress-export.xml -s DATETIME -o /home/seeseekey/MarkdownExport
 
 ### Parameter
 
@@ -22,16 +28,17 @@ The options available are:
 
 ## Conversion
 
-WordPress2Markdown converted the following html and other tags:
+Convert2Markdown converted the following html and other tags:
 
 * \<em\>
 * \<b\>
 * \<blockquote\>
+* \<code\>
+* \<nowiki\>
 * \<pre\>
 * \<img\>
 * \<a\>
 * Lists
-* WordPress caption blocks ([caption])
 
 All other tags are striped.
 
@@ -47,8 +54,8 @@ Package can be created with:
 
 ## Authors
 
-* seeseekey - https://seeseekey.net
+* seeseekey - [seeseekey.net](https://seeseekey.net)
 
 ## License
 
-WordPress2Markdown is licensed under GPL3.
+Convert2Markdown is licensed under GPL3.

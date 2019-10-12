@@ -1,15 +1,14 @@
-package net.seeseekey.wordpress2markdown;
+package net.seeseekey.convert2markdown.utils;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public class TestUtils {
 
-public class MarkdownTests {
+    private TestUtils() {}
 
     public static String getResourceAsString(String resource) {
 
@@ -19,14 +18,5 @@ public class MarkdownTests {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    @Test
-    void convertToMarkdownTest() {
-
-        String html = getResourceAsString("test.html");
-        String markdown = Markdown.convert(html);
-
-        assertEquals(getResourceAsString("test.md"), markdown);
     }
 }

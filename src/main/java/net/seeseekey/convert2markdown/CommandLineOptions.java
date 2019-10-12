@@ -1,8 +1,8 @@
-package net.seeseekey.wordpress2markdown;
+package net.seeseekey.convert2markdown;
 
 import com.lexicalscope.jewel.cli.Option;
 
-interface CommandLineOptions {
+public interface CommandLineOptions {
 
     @Option(description = "Input path", shortName = "i", defaultValue = "")
     String getInput();
