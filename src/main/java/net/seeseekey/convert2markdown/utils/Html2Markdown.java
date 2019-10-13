@@ -67,7 +67,8 @@ public class Html2Markdown {
                     break;
                 }
 
-                case "b": {
+                case "b":
+                case "strong": {
 
                     stringBuilder.append("**");
 

@@ -6,8 +6,10 @@ input formats:
 * MediaWiki XML dump file
 * WordPress eXtended RSS (WXR)
 
-Convert2Markdown is a tool that convert WordPress eXtended RSS (WXR) into markdown. Export the WordPress site via
-backend and use the WordPress eXtended RSS (WXR) with this tool.
+Export the WordPress site via backend and use the WordPress eXtended RSS (WXR) with this tool. For MediaWiki dumps
+use the dumpBackup.php from the MediaWiki maintenance folder:
+
+> php dumpBackup.php --current > dump.xml
 
 ## Usage
 
@@ -37,6 +39,7 @@ Convert2Markdown converted the following html and other tags:
 * \<nowiki\>
 * \<pre\>
 * \<img\>
+* \<strong\>
 * \<a\>
 * Lists
 

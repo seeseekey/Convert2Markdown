@@ -38,4 +38,4 @@ A link with an image:
 
 [](https://example.org/book-1024x944.png)
 
-READY.
+**READY.**
