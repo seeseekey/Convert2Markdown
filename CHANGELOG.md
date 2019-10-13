@@ -2,7 +2,7 @@
 
 This changelog goes through all the changes that have been made in each release.
 
-## [1.1.0]() - 2019-10-11 (unreleased)
+## [1.1.0](https://github.com/seeseekey/Convert2Markdown/releases/tag/v1.1) - 2019-10-13
 * Added
   * Implement conversion of MediaWiki dump files
   * Add statistical information for export
