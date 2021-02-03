@@ -7,7 +7,7 @@
     <!-- Artifact / group id and version -->
     <groupId>net.seeseekey</groupId>
     <artifactId>Convert2Markdown</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
 
     <!-- Metadata -->
     <name>Convert2Markdown</name>
@@ -36,14 +36,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-
-    <!-- External non standard repositories -->
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/seeseekey/mediawikixml</url>
-        </repository>
-    </repositories>
 
     <!-- List of dependencies -->
     <dependencies>
@@ -81,7 +73,7 @@
         <dependency>
             <groupId>net.seeseekey</groupId>
             <artifactId>mediawikixml</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
 
         <!-- Test related dependencies -->
