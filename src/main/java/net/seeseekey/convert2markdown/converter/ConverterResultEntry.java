@@ -12,8 +12,7 @@ public class ConverterResultEntry {
     private int hour;
     private int minute;
 
-    private String title;
-    private String content;
+    private final String content;
 
     public String getId() {
         return id;
@@ -43,15 +42,15 @@ public class ConverterResultEntry {
         return minute;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public String getContent() {
         return content;
     }
 
-    public ConverterResultEntry(String id, String author, int year, int month, int day, int hour, int minute, String title, String content) {
+    public ConverterResultEntry(String content) {
+        this.content = content;
+    }
+
+    public ConverterResultEntry(String id, String author, int year, int month, int day, int hour, int minute, String content) {
         this.id = id;
         this.author = author;
         this.year = year;
@@ -59,7 +58,6 @@ public class ConverterResultEntry {
         this.day = day;
         this.hour = hour;
         this.minute = minute;
-        this.title = title;
         this.content = content;
     }
 }

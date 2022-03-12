@@ -6,15 +6,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Html2Markdown {
 
-    private static Logger logger = LoggerFactory.getLogger(new Exception().fillInStackTrace().getStackTrace()[0].getClassName());
+    private static final Logger log = Logging.getLogger();
 
     private static final String REGULAR_EXPRESSION_LINE_BREAK = "\r\n?|\n";
 
-    private Html2Markdown() {}
+    private Html2Markdown() {
+    }
 
     /**
      * Evaluate the nodes and extract the information for markdown (and convert too)
@@ -25,50 +25,33 @@ public class Html2Markdown {
      */
     private static void evaluateNode(Node node, Node parentNode, StringBuilder stringBuilder) {
 
-        if (node instanceof TextNode) {
+        if (node instanceof TextNode textNode) {
 
             // Extract content from TextNode
-            TextNode textNode = (TextNode) node;
             String wholeText = textNode.getWholeText();
 
             switch (parentNode.nodeName()) {
-                case "a": {
-                    wholeText = "[" + wholeText + "](" + parentNode.attr("href") + ")";
-                    break;
-                }
-                case "blockquote":
-                case "code":
-                case "nowiki":
-                case "pre": {
-                    wholeText = "> " + wholeText.replace("\n", "\n> ");
-                    break;
-                }
-                case "ul": {
-                    wholeText = "";
-                    break;
+                case "a" -> wholeText = "[" + wholeText + "](" + parentNode.attr("href") + ")";
+                case "blockquote", "code", "nowiki", "pre" -> wholeText = "> " + wholeText.replace("\n", "\n> ");
+                case "ul" -> wholeText = "";
+                default -> {
+                    // Ignore other nodes
                 }
             }
 
             stringBuilder.append(wholeText);
+
         } else {
 
             // Convert HTML tags into markdown
             switch (node.nodeName()) {
-                case "a":
-                case "blockquote":
-                case "code":
-                case "nowiki":
-                case "pre": {
+                case "a", "blockquote", "code", "nowiki", "pre" -> {
 
                     for (Node childNode : node.childNodes()) {
                         evaluateNode(childNode, node, stringBuilder);
                     }
-
-                    break;
                 }
-
-                case "b":
-                case "strong": {
+                case "b", "strong" -> {
 
                     stringBuilder.append("**");
 
@@ -77,9 +60,8 @@ public class Html2Markdown {
                     }
 
                     stringBuilder.append("**");
-                    break;
                 }
-                case "em": {
+                case "em" -> {
 
                     stringBuilder.append("*");
 
@@ -88,14 +70,12 @@ public class Html2Markdown {
                     }
 
                     stringBuilder.append("*");
-                    break;
                 }
-                case "img": {
+                case "img" -> {
                     String markdownLink = "[" + node.attr("alt") + "](" + node.attr("src") + ")";
                     stringBuilder.append(markdownLink);
-                    break;
                 }
-                case "li": {
+                case "li" -> {
 
                     stringBuilder.append("* ");
 
@@ -104,19 +84,17 @@ public class Html2Markdown {
                     }
 
                     stringBuilder.append("\n");
-                    break;
                 }
-                case "ul": {
+                case "ul" -> {
 
                     for (Node childNode : node.childNodes()) {
                         evaluateNode(childNode, node, stringBuilder);
                     }
 
                     stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-                    break;
                 }
-                default: {
-                    logger.info("Ignore unknown tag: {}", node.nodeName());
+                default -> {
+                    log.info("Ignore unknown tag: {}", node.nodeName());
 
                     for (Node childNode : node.childNodes()) {
                         evaluateNode(childNode, node, stringBuilder);

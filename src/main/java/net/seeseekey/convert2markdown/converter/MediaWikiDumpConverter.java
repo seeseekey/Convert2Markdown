@@ -1,24 +1,24 @@
 package net.seeseekey.convert2markdown.converter;
 
 import com.rometools.rome.io.FeedException;
-import net.seeseekey.mediawikixml.wikipedia.PageCallbackHandler;
-import net.seeseekey.mediawikixml.wikipedia.WikiPage;
+import net.seeseekey.convert2markdown.options.FileScheme;
+import net.seeseekey.convert2markdown.utils.FileUtils;
+import net.seeseekey.convert2markdown.utils.Logging;
+import net.seeseekey.convert2markdown.utils.MediaWiki2Markdown;
 import net.seeseekey.mediawikixml.wikipedia.WikiXMLParser;
 import net.seeseekey.mediawikixml.wikipedia.WikiXMLParserFactory;
-import net.seeseekey.convert2markdown.utils.FileUtils;
-import net.seeseekey.convert2markdown.utils.MediaWiki2Markdown;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MediaWikiDumpConverter implements Converter {
 
-    private static Logger logger = LoggerFactory.getLogger(new Exception().fillInStackTrace().getStackTrace()[0].getClassName());
+    private static final Logger log = Logging.getLogger();
 
     @Override
     public boolean canProcessed(String input) {
@@ -38,6 +38,12 @@ public class MediaWikiDumpConverter implements Converter {
     }
 
     @Override
+    public Set<FileScheme> getSupportedSchemes() {
+
+        return Set.of(FileScheme.DATETIME, FileScheme.POST_ID);
+    }
+
+    @Override
     public ConverterResult convert(String input, String filterByAuthor) throws IOException, FeedException, XMLStreamException {
 
         WikiXMLParser wikiXMLParser = WikiXMLParserFactory.getParser(input);
@@ -52,41 +58,39 @@ public class MediaWikiDumpConverter implements Converter {
 
         try {
 
-            wikiXMLParser.setPageCallback(new PageCallbackHandler() {
-                public void process(WikiPage page) {
+            wikiXMLParser.setPageCallback(page -> {
 
-                    String id = page.getId();
-                    String title = page.getTitle();
+                String id = page.getId();
+                String title = page.getTitle();
 
-                    ZonedDateTime localDateTime = page.getTimestamp();
+                ZonedDateTime localDateTime = page.getTimestamp();
 
-                    int year = localDateTime.getYear();
-                    int month = localDateTime.getMonth().getValue();
-                    int day = localDateTime.getDayOfMonth();
+                int year = localDateTime.getYear();
+                int month = localDateTime.getMonth().getValue();
+                int day = localDateTime.getDayOfMonth();
 
-                    int hour = localDateTime.getHour();
-                    int minute = localDateTime.getMinute();
+                int hour = localDateTime.getHour();
+                int minute = localDateTime.getMinute();
 
-                    String content = page.getWikiText();
+                String content = page.getWikiText();
 
-                    // Skip empty pages
-                    if(content.trim().equals("")) {
-                        skipped[0]++;
-                        return;
-                    }
-
-                    content = "# " + title.trim() + "\n\n" + content.trim();
-
-                    content = MediaWiki2Markdown.convert(content);
-
-                    pages[0]++;
-                    entries.add(new ConverterResultEntry(id, "", year, month, day, hour, minute, title, content));
+                // Skip empty pages
+                if (content.trim().equals("")) {
+                    skipped[0]++;
+                    return;
                 }
+
+                content = "# " + title.trim() + "\n\n" + content.trim();
+
+                content = MediaWiki2Markdown.convert(content);
+
+                pages[0]++;
+                entries.add(new ConverterResultEntry(id, "", year, month, day, hour, minute, content));
             });
 
             wikiXMLParser.parse();
         } catch (Exception e) {
-            logger.error("Error on reading page: ", e);
+            log.error("Error on reading page: ", e);
         }
 
         return new ConverterResult(entries, skipped[0], posts, pages[0]);

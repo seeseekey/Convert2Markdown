@@ -16,6 +16,8 @@ use the dumpBackup.php from the MediaWiki maintenance folder:
 Convert2Markdown is a command line tool.
 
 > java -jar Convert2Markdown.jar -i wordpress-export.xml -s DATETIME -o /home/seeseekey/MarkdownExport
+> 
+> -i /Users/seeseekey/Xport/seeseekeynet.WordPress.2021-06-14.xml -s DATETIME -o /Users/seeseekey/Xport/export
 
 ### Parameter
 

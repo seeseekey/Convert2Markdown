@@ -7,22 +7,25 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import net.seeseekey.convert2markdown.options.FileScheme;
+import net.seeseekey.convert2markdown.utils.DateTimeUtils;
 import net.seeseekey.convert2markdown.utils.FileUtils;
 import net.seeseekey.convert2markdown.utils.Html2Markdown;
-import net.seeseekey.convert2markdown.utils.DateTimeUtils;
+import net.seeseekey.convert2markdown.utils.Logging;
 import org.jdom2.Element;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class WordPressExtendedRssConverter implements Converter {
 
-    private static Logger logger = LoggerFactory.getLogger(new Exception().fillInStackTrace().getStackTrace()[0].getClassName());
+    private static final Logger log = Logging.getLogger();
 
     @Override
     public boolean canProcessed(String input) {
@@ -30,7 +33,7 @@ public class WordPressExtendedRssConverter implements Converter {
         try {
             String header = FileUtils.readFirstBytes(input, 3000);
 
-            if(header.toLowerCase().contains("wordpress")) {
+            if (header.toLowerCase().contains("wordpress")) {
                 return true;
             }
 
@@ -42,10 +45,16 @@ public class WordPressExtendedRssConverter implements Converter {
     }
 
     @Override
+    public Set<FileScheme> getSupportedSchemes() {
+
+        return Set.of(FileScheme.DATETIME, FileScheme.POST_ID);
+    }
+
+    @Override
     public ConverterResult convert(String input, String filterByAuthor) throws IOException, FeedException {
 
         // Parse feed
-        logger.info("Loading feed...");
+        log.info("Loading feed...");
         URL feedUrl = new URL("file:" + input);
         SyndFeedInput syndFeedInput = new SyndFeedInput();
         SyndFeed syndFeed = syndFeedInput.build(new XmlReader(feedUrl));
@@ -62,7 +71,15 @@ public class WordPressExtendedRssConverter implements Converter {
         for (SyndEntry entry : syndFeed.getEntries()) {
 
             // Get published date to create path
-            LocalDateTime localDateTime = DateTimeUtils.convertToLocalDateTime(entry.getPublishedDate());
+            Date publishedDate = entry.getPublishedDate();
+
+            LocalDateTime localDateTime;
+
+            if (publishedDate == null) {
+                localDateTime = LocalDateTime.MIN;
+            } else {
+                localDateTime = DateTimeUtils.convertToLocalDateTime(publishedDate);
+            }
 
             int year = localDateTime.getYear();
             int month = localDateTime.getMonth().getValue();
@@ -77,19 +94,18 @@ public class WordPressExtendedRssConverter implements Converter {
                     .findAny()
                     .orElse(null);
 
+            if(postTypeElement == null) {
+                log.warn("Skip element, because postTypeElement is null.");
+                continue;
+            }
+
             String postType = postTypeElement.getValue();
 
             // Skip all non post and pages e.g. attachment
             switch (postType) {
-                case "page": {
-                    pages++;
-                    break;
-                }
-                case "post": {
-                    posts++;
-                    break;
-                }
-                default: {
+                case "page" -> pages++;
+                case "podcast", "post" -> posts++;
+                default -> {
                     skipped++;
                     continue;
                 }
@@ -100,6 +116,11 @@ public class WordPressExtendedRssConverter implements Converter {
                     .filter(element -> "status".equals(element.getName()))
                     .findAny()
                     .orElse(null);
+
+            if(statusElement == null) {
+                log.warn("Skip element, because statusElement is null.");
+                continue;
+            }
 
             String status = statusElement.getValue();
 
@@ -114,11 +135,9 @@ public class WordPressExtendedRssConverter implements Converter {
             String author = dcModule.getCreator();
 
             // Check if author filter is activated and check if author passed the filter
-            if (filterByAuthor != null) {
-                if (!filterByAuthor.equals(author)) {
-                    skipped++;
-                    continue;
-                }
+            if (filterByAuthor != null && !filterByAuthor.equals(author)) {
+                skipped++;
+                continue;
             }
 
             // Get post id from foreign markup (via stream api)
@@ -127,20 +146,27 @@ public class WordPressExtendedRssConverter implements Converter {
                     .findAny()
                     .orElse(null);
 
+            if(postIdElement == null) {
+                log.warn("Skip element, because postIdElement is null.");
+                continue;
+            }
+
             int postId = Integer.parseInt(postIdElement.getValue());
 
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("# " + entry.getTitle().trim() + "\n");
-            stringBuilder.append("\n");
+            stringBuilder.append("# ");
+            stringBuilder.append(entry.getTitle().trim());
+            stringBuilder.append("\n\n");
 
             // Content
             for (SyndContent content : entry.getContents()) {
 
                 String contentAsString = Html2Markdown.convert(content.getValue());
-                stringBuilder.append(contentAsString + "\n");
+                stringBuilder.append(contentAsString);
+                stringBuilder.append("\n");
             }
 
-            entries.add(new ConverterResultEntry(String.valueOf(postId), author, year, month, day, hour, minute, entry.getTitle().trim(), stringBuilder.toString()));
+            entries.add(new ConverterResultEntry(String.valueOf(postId), author, year, month, day, hour, minute, stringBuilder.toString()));
         }
 
         return new ConverterResult(entries, skipped, posts, pages);

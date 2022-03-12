@@ -6,10 +6,13 @@ import com.rometools.rome.io.FeedException;
 import net.seeseekey.convert2markdown.converter.Converter;
 import net.seeseekey.convert2markdown.converter.ConverterResult;
 import net.seeseekey.convert2markdown.converter.ConverterResultEntry;
+import net.seeseekey.convert2markdown.converter.CsvConverter;
 import net.seeseekey.convert2markdown.converter.MediaWikiDumpConverter;
 import net.seeseekey.convert2markdown.converter.WordPressExtendedRssConverter;
+import net.seeseekey.convert2markdown.options.CommandLineOptions;
+import net.seeseekey.convert2markdown.options.FileScheme;
+import net.seeseekey.convert2markdown.utils.Logging;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -23,7 +26,9 @@ import java.util.Locale;
 
 public class Convert2Markdown {
 
-    private static Logger logger = LoggerFactory.getLogger(new Exception().fillInStackTrace().getStackTrace()[0].getClassName());
+    private static final Logger log = Logging.getLogger();
+
+    private static final String PATH_DELIMITER = "/";
 
     public static void main(String[] args) throws IOException, FeedException, XMLStreamException {
 
@@ -36,17 +41,17 @@ public class Convert2Markdown {
         try {
             commandLineOptions = CliFactory.parseArguments(CommandLineOptions.class, args);
         } catch (ArgumentValidationException e) {
-            System.out.println(e.getMessage());
+            log.info(e.getMessage());
             return;
         }
 
         String input = commandLineOptions.getInput();
         String output = commandLineOptions.getOutput();
-        CommandLineOptions.Scheme scheme = commandLineOptions.getScheme();
+        FileScheme scheme = commandLineOptions.getScheme();
 
         // Check given arguments
         if (input.isEmpty()) {
-            logger.error("Input file must be set!");
+            log.error("Input file must be set!");
             return;
         }
 
@@ -60,7 +65,7 @@ public class Convert2Markdown {
         }
 
         if (scheme == null) {
-            scheme = CommandLineOptions.Scheme.POST_ID;
+            scheme = FileScheme.POST_ID;
         }
 
         // Filter options
@@ -70,13 +75,15 @@ public class Convert2Markdown {
         boolean exportAuthors = commandLineOptions.isAuthors();
 
         // Print message
-        logger.info("Convert2Markdown");
+        log.info("Convert2Markdown");
 
         // Init converters
+        CsvConverter csvConverter = new CsvConverter();
         MediaWikiDumpConverter mediaWikiDumpConverter = new MediaWikiDumpConverter();
         WordPressExtendedRssConverter wordPressExtendedRssConverter = new WordPressExtendedRssConverter();
 
         List<Converter> converters = new ArrayList<>();
+        converters.add(csvConverter);
         converters.add(mediaWikiDumpConverter);
         converters.add(wordPressExtendedRssConverter);
 
@@ -101,42 +108,50 @@ public class Convert2Markdown {
 
                 for (ConverterResultEntry entry : converterResult.getEntries()) {
 
-                    // Build path and create directories
-                    String path = output + entry.getYear() + "/" + twoDigitsFormatter.format(entry.getMonth()) + "/";
-                    File pathAsFile = new File(path);
-                    pathAsFile.mkdirs();
+                    // Match scheme to supported scheme
+                    if (!converter.getSupportedSchemes().contains(scheme)) {
+
+                        scheme = converter.getSupportedSchemes().iterator().next();
+                    }
+
+                    String path = output;
+
+                    if(scheme != FileScheme.SINGLE) {
+                        // Build path and create directories
+                        path = output + entry.getYear() + PATH_DELIMITER + twoDigitsFormatter.format(entry.getMonth()) + PATH_DELIMITER;
+                        File pathAsFile = new File(path);
+
+                        boolean created = pathAsFile.mkdirs();
+
+                        if(!created) {
+                            log.debug("Path {} exists already", path);
+                        }
+                    }
 
                     // Get filename from scheme
                     String filename = null;
 
                     switch (scheme) {
-                        case POST_ID: {
-                            filename = path + entry.getId() + ".md";
-                            break;
-                        }
-                        case DATETIME: {
-                            filename = path
-                                    + entry.getYear()
-                                    + "-"
-                                    + twoDigitsFormatter.format(entry.getMonth())
-                                    + "-"
-                                    + twoDigitsFormatter.format(entry.getDay())
-                                    + "-"
-                                    + twoDigitsFormatter.format(entry.getHour())
-                                    + "-"
-                                    + twoDigitsFormatter.format(entry.getMinute())
-                                    + ".md";
-                            break;
-                        }
+                        case DATETIME -> filename = path
+                                + entry.getYear()
+                                + "-"
+                                + twoDigitsFormatter.format(entry.getMonth())
+                                + "-"
+                                + twoDigitsFormatter.format(entry.getDay())
+                                + "-"
+                                + twoDigitsFormatter.format(entry.getHour())
+                                + "-"
+                                + twoDigitsFormatter.format(entry.getMinute())
+                                + ".md";
+                        case POST_ID -> filename = path + entry.getId() + ".md";
+                        case SINGLE -> filename = path + "output.md";
                     }
 
                     // Write markdown file
-                    logger.info("Write file: " + filename);
+                    log.info("Write file: {}", filename);
 
                     try (PrintWriter fileWriter = new PrintWriter(filename)) {
 
-                        // Heading (title)
-                        String title = "# " + entry.getTitle().trim();
                         fileWriter.print(entry.getContent());
 
                         // Metadata
@@ -157,9 +172,9 @@ public class Convert2Markdown {
         DecimalFormat decimalFormat = new DecimalFormat("#.00"); // Create pattern for formatting
 
         // Print out statistics
-        logger.info("Skipped entries (e.g drafts, filtered entries, attachments): " + skipped);
-        logger.info("Exported Pages: " + pages);
-        logger.info("Exported Posts: " + posts);
-        logger.info("Export completed in " + decimalFormat.format(timeDifferenceInSeconds) + " seconds");
+        log.info("Skipped entries (e.g drafts, filtered entries, attachments): {}", skipped);
+        log.info("Exported Pages: {}", pages);
+        log.info("Exported Posts: {}", posts);
+        log.info("Export completed in {} seconds", decimalFormat.format(timeDifferenceInSeconds));
     }
 }

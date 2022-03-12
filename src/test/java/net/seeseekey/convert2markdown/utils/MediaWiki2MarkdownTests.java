@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MediaWiki2MarkdownTests {
+class MediaWiki2MarkdownTests {
 
     @Test
     void convertToMarkdownTest() {
 
-        String html = TestUtils.getResourceAsString("testmediawiki.txt");
+        String html = TestUtils.getResourceAsString("testMediaWiki.txt");
         String markdown = MediaWiki2Markdown.convert(html);
 
-        assertEquals(TestUtils.getResourceAsString("testmediawiki.md"), markdown);
+        assertEquals(TestUtils.getResourceAsString("testMediaWiki.md"), markdown);
     }
 }

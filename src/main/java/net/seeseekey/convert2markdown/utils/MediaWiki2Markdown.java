@@ -18,7 +18,7 @@ public class MediaWiki2Markdown {
 
         // Find all blockquote tags
         final Matcher matcher = patternHeading.matcher(mediawiki);
-        StringBuffer stringBuffer = new StringBuffer(mediawiki.length());
+        StringBuilder stringBuilder = new StringBuilder(mediawiki.length());
 
         // Translate each tag
         while (matcher.find()) {
@@ -27,32 +27,20 @@ public class MediaWiki2Markdown {
             String group = matcher.group();
 
             // Remove tags
-            String heading = "";
+            String heading = "=".repeat(level);
 
-            for(int i=0; i<level; i++) {
-                heading += "=";
-            }
-
-            String headingReplacement = "";
-
-            for(int i=0; i<level; i++) {
-                headingReplacement += "#";
-            }
-
-            headingReplacement += " ";
-
-            group = group.replaceFirst(heading, headingReplacement);
+            group = group.replaceFirst(heading, "#".repeat(level) + " ");
             group = group.replace(heading, "");
 
             // Escape regex replacement parameter ($) and others
             group = Matcher.quoteReplacement(group);
 
             // Replace old tag with markdown equivalent
-            matcher.appendReplacement(stringBuffer, group);
+            matcher.appendReplacement(stringBuilder, group);
         }
 
-        matcher.appendTail(stringBuffer);
-        return stringBuffer.toString();
+        matcher.appendTail(stringBuilder);
+        return stringBuilder.toString();
     }
 
     public static String convert(String mediawiki) {
