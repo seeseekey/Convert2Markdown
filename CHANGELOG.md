@@ -10,7 +10,7 @@ This changelog goes through all the changes that have been made in each release.
 * Update project to Java 17
 * Rework changelog
 * Update dependencies
-* Change license from GPL3 zu AGPL3
+* Change license from GPL3 to AGPL3
 
 ### Fixed
 * Fix some SonarLint code smells
