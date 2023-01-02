@@ -118,7 +118,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>net.seeseekey.grid.Grid</mainClass>
+                            <mainClass>net.seeseekey.convert2markdown.Convert2Markdown</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
