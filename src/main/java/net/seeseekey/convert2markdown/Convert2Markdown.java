@@ -26,7 +26,7 @@ import java.util.Locale;
 
 public class Convert2Markdown {
 
-    private static final Logger log = Logging.getLogger();
+    private static final Logger LOG = Logging.getLogger();
 
     private static final String PATH_DELIMITER = "/";
 
@@ -41,7 +41,7 @@ public class Convert2Markdown {
         try {
             commandLineOptions = CliFactory.parseArguments(CommandLineOptions.class, args);
         } catch (ArgumentValidationException e) {
-            log.info(e.getMessage());
+            LOG.info(e.getMessage());
             return;
         }
 
@@ -51,7 +51,7 @@ public class Convert2Markdown {
 
         // Check given arguments
         if (input.isEmpty()) {
-            log.error("Input file must be set!");
+            LOG.error("Input file must be set!");
             return;
         }
 
@@ -75,7 +75,7 @@ public class Convert2Markdown {
         boolean exportAuthors = commandLineOptions.isAuthors();
 
         // Print message
-        log.info("Convert2Markdown");
+        LOG.info("Convert2Markdown");
 
         // Init converters
         CsvConverter csvConverter = new CsvConverter();
@@ -98,7 +98,7 @@ public class Convert2Markdown {
         // Check format, process and write files
         for (Converter converter : converters) {
 
-            if (converter.canProcessed(input)) {
+            if (converter.canBeProcessed(input)) {
 
                 ConverterResult converterResult = converter.convert(input, filterByAuthor);
 
@@ -124,7 +124,7 @@ public class Convert2Markdown {
                         boolean created = pathAsFile.mkdirs();
 
                         if(!created) {
-                            log.debug("Path {} exists already", path);
+                            LOG.debug("Path {} exists already", path);
                         }
                     }
 
@@ -148,7 +148,7 @@ public class Convert2Markdown {
                     }
 
                     // Write markdown file
-                    log.info("Write file: {}", filename);
+                    LOG.info("Write file: {}", filename);
 
                     try (PrintWriter fileWriter = new PrintWriter(filename)) {
 
@@ -172,9 +172,9 @@ public class Convert2Markdown {
         DecimalFormat decimalFormat = new DecimalFormat("#.00"); // Create pattern for formatting
 
         // Print out statistics
-        log.info("Skipped entries (e.g drafts, filtered entries, attachments): {}", skipped);
-        log.info("Exported Pages: {}", pages);
-        log.info("Exported Posts: {}", posts);
-        log.info("Export completed in {} seconds", decimalFormat.format(timeDifferenceInSeconds));
+        LOG.info("Skipped entries (e.g drafts, filtered entries, attachments): {}", skipped);
+        LOG.info("Exported Pages: {}", pages);
+        LOG.info("Exported Posts: {}", posts);
+        LOG.info("Export completed in {} seconds", decimalFormat.format(timeDifferenceInSeconds));
     }
 }

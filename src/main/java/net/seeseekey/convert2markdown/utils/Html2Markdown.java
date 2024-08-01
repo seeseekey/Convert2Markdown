@@ -7,9 +7,12 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.slf4j.Logger;
 
+/**
+ * The Html2Markdown class provides functionality to convert HTML to Markdown.
+ */
 public class Html2Markdown {
 
-    private static final Logger log = Logging.getLogger();
+    private static final Logger LOG = Logging.getLogger();
 
     private static final String REGULAR_EXPRESSION_LINE_BREAK = "\r\n?|\n";
 
@@ -94,7 +97,7 @@ public class Html2Markdown {
                     stringBuilder.deleteCharAt(stringBuilder.length() - 1);
                 }
                 default -> {
-                    log.info("Ignore unknown tag: {}", node.nodeName());
+                    LOG.info("Ignore unknown tag: {}", node.nodeName());
 
                     for (Node childNode : node.childNodes()) {
                         evaluateNode(childNode, node, stringBuilder);

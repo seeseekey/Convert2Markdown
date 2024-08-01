@@ -25,10 +25,10 @@ import java.util.Set;
 
 public class WordPressExtendedRssConverter implements Converter {
 
-    private static final Logger log = Logging.getLogger();
+    private static final Logger LOG = Logging.getLogger();
 
     @Override
-    public boolean canProcessed(String input) {
+    public boolean canBeProcessed(String input) {
 
         try {
             String header = FileUtils.readFirstBytes(input, 3000);
@@ -54,7 +54,7 @@ public class WordPressExtendedRssConverter implements Converter {
     public ConverterResult convert(String input, String filterByAuthor) throws IOException, FeedException {
 
         // Parse feed
-        log.info("Loading feed...");
+        LOG.info("Loading feed...");
         URL feedUrl = new URL("file:" + input);
         SyndFeedInput syndFeedInput = new SyndFeedInput();
         SyndFeed syndFeed = syndFeedInput.build(new XmlReader(feedUrl));
@@ -95,7 +95,7 @@ public class WordPressExtendedRssConverter implements Converter {
                     .orElse(null);
 
             if(postTypeElement == null) {
-                log.warn("Skip element, because postTypeElement is null.");
+                LOG.warn("Skip element, because postTypeElement is null.");
                 continue;
             }
 
@@ -118,7 +118,7 @@ public class WordPressExtendedRssConverter implements Converter {
                     .orElse(null);
 
             if(statusElement == null) {
-                log.warn("Skip element, because statusElement is null.");
+                LOG.warn("Skip element, because statusElement is null.");
                 continue;
             }
 
@@ -147,7 +147,7 @@ public class WordPressExtendedRssConverter implements Converter {
                     .orElse(null);
 
             if(postIdElement == null) {
-                log.warn("Skip element, because postIdElement is null.");
+                LOG.warn("Skip element, because postIdElement is null.");
                 continue;
             }
 
