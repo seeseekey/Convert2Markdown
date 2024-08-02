@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface Converter {
 
-    boolean canProcessed(String input);
+    boolean canBeProcessed(String input);
 
     Set<FileScheme> getSupportedSchemes();
 

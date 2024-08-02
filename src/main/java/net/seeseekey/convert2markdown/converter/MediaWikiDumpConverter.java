@@ -18,10 +18,10 @@ import java.util.Set;
 
 public class MediaWikiDumpConverter implements Converter {
 
-    private static final Logger log = Logging.getLogger();
+    private static final Logger LOG = Logging.getLogger();
 
     @Override
-    public boolean canProcessed(String input) {
+    public boolean canBeProcessed(String input) {
 
         try {
             String header = FileUtils.readFirstBytes(input, 3000);
@@ -90,7 +90,7 @@ public class MediaWikiDumpConverter implements Converter {
 
             wikiXMLParser.parse();
         } catch (Exception e) {
-            log.error("Error on reading page: ", e);
+            LOG.error("Error on reading page: ", e);
         }
 
         return new ConverterResult(entries, skipped[0], posts, pages[0]);

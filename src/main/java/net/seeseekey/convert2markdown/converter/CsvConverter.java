@@ -16,10 +16,10 @@ import java.util.Set;
 
 public class CsvConverter implements Converter {
 
-    private static final Logger log = Logging.getLogger();
+    private static final Logger LOG = Logging.getLogger();
 
     @Override
-    public boolean canProcessed(String input) {
+    public boolean canBeProcessed(String input) {
 
         return input.endsWith(".csv");
     }
@@ -39,7 +39,7 @@ public class CsvConverter implements Converter {
         try (CSVReader reader = new CSVReader(new FileReader(input))) {
             columns = reader.readAll();
         } catch (CsvException e) {
-            log.error("Can't read CSV file.", e);
+            LOG.error("Can't read CSV file.", e);
             return null;
         }
 

@@ -7,9 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+/**
+ * The FileUtils class provides utility methods for file operations.
+ */
 public class FileUtils {
 
-    private static final Logger log = Logging.getLogger();
+    private static final Logger LOG = Logging.getLogger();
 
     private FileUtils() {
     }
@@ -22,7 +25,7 @@ public class FileUtils {
             int read = inputStream.read(bytes);
 
             if(read < bytes.length) {
-                log.info("Only read {} bytes of {} specified.", read, bytes.length);
+                LOG.info("Only read {} bytes of {} specified.", read, bytes.length);
             }
         }
 

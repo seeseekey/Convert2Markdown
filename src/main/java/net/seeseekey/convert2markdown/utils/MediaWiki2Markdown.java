@@ -3,6 +3,9 @@ package net.seeseekey.convert2markdown.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The MediaWiki2Markdown class provides functionality to convert MediaWiki syntax to Markdown syntax.
+ */
 public class MediaWiki2Markdown {
 
     private MediaWiki2Markdown() {
