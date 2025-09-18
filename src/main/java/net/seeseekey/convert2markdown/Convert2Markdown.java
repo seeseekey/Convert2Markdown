@@ -167,8 +167,22 @@ public class Convert2Markdown {
             }
         }
 
-        // Measure time
+        // Measure time and print statistic
         double timeDifferenceInSeconds = (System.nanoTime() - startTime) / 1000000000.0; // Get seconds from nano seconds
+        printStatistic(skipped, pages, posts, timeDifferenceInSeconds);
+    }
+
+    /**
+     * Prints out statistics related to the export process.
+     *
+     * @param skipped                    The number of skipped entries, such as drafts, filtered entries, or attachments.
+     * @param pages                      The number of exported pages.
+     * @param posts                      The number of exported posts.
+     * @param timeDifferenceInSeconds    The time taken to complete the export process, in seconds.
+     */
+    private static void printStatistic(int skipped, int pages, int posts, double timeDifferenceInSeconds) {
+
+        // Define decimal format formatting time in seconds to two decimal places
         DecimalFormat decimalFormat = new DecimalFormat("#.00"); // Create pattern for formatting
 
         // Print out statistics
